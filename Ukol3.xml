@@ -1,0 +1,62 @@
+package com.example.ukol3dicethrowxml
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+// Hlavní aktivita aplikace pro házení kostkou
+class MainActivity : AppCompatActivity() {
+    
+    // Metoda volaná při vytvoření aktivity
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_main)
+        
+        // Nastavení okrajů pro zobrazení přes celou obrazovku (Edge-to-Edge)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.llmain)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        // Inicializace tlačítek a textových prvků z layoutu
+        val btnRoll = findViewById<Button>(R.id.btnRoll)
+        val ivDice = findViewById<TextView>(R.id.ivDice)
+
+        // Seznam Unicode znaků pro jednotlivé strany kostky (1 až 6)
+        val diceFaces = listOf("⚀", "⚁", "⚂", "⚃", "⚄", "⚅")
+
+        // Obsluha kliknutí na tlačítko pro hod kostkou
+        btnRoll.setOnClickListener {
+            // Spuštění asynchronní korutiny pro plynulou animaci hodu
+            lifecycleScope.launch {
+                btnRoll.isEnabled = false
+
+                var currentDelay = 40L
+                val steps = 14
+                
+                // Plynulá animace s efektem zpomalení (Ease-out)
+                repeat(steps) { step ->
+                    ivDice.text = diceFaces.random()
+                    currentDelay += (step * 8)
+                    delay(currentDelay)
+                }
+
+                // Výpočet náhodného čísla a zobrazení finálního výsledku
+                val diceValue = (1..6).random()
+                ivDice.text = diceFaces[diceValue - 1]
+
+                btnRoll.isEnabled = true
+            }
+        }
+    }
+}
+
