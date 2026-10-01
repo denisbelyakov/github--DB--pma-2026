@@ -60,3 +60,44 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llmain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#F5F3FF"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/titulek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hod' Kostkou"
+        android:textSize="28dp"
+        android:textStyle="bold"
+        android:textColor="#352060"
+        />
+    <TextView
+        android:id="@+id/ivDice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24sp"
+        android:layout_marginBottom="24sp"
+        android:text="⚀"
+        android:textSize="120sp"
+        android:textColor="#352060" />
+
+    <Button
+        android:id="@+id/btnRoll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hodit"
+        android:textSize="24sp" />
+
+</LinearLayout>
