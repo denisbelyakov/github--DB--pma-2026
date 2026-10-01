@@ -1,0 +1,103 @@
+package com.example.ukol3dicethrowcompose
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.ukol3dicethrowcompose.ui.theme.Ukol3DiceThrowComposeTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            Ukol3DiceThrowComposeTheme {
+                DiceRollerApp()
+            }
+        }
+    }
+}
+
+// Hlavní composable funkce aplikace
+@Composable
+fun DiceRollerApp() {
+    // Stavy pro aktuální symbol kostky a stav animace
+    var currentDice by remember { mutableStateOf("⚀") }
+    var isRolling by remember { mutableStateOf(false) }
+
+    val coroutineScope = rememberCoroutineScope()
+    // Seznam symbolů hrací kostky
+    val diceSymbols = listOf("⚀", "⚁", "⚂", "⚃", "⚄", "⚅")
+
+    // Hlavní rozvržení vystředěné na střed a nepřekryté lištami
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F3FF))
+            .systemBarsPadding()
+            .padding(24.dp)
+            .testTag("llMain"),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        // Nadpis aplikace
+        Text(
+            text = "Hoď kostkou",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF352060),
+            modifier = Modifier.testTag("tvTitle")
+        )
+
+        // Velký symbol kostky
+        Text(
+            text = currentDice,
+            fontSize = 120.sp,
+            color = Color(0xFF352060),
+            modifier = Modifier
+                .padding(vertical = 24.dp)
+                .testTag("tvDice")
+        )
+
+        // Tlačítko pro spuštění hodu (během animace zakázané)
+        Button(
+            onClick = {
+                // Animace hodu kostkou s postupným zpomalováním
+                coroutineScope.launch {
+                    isRolling = true
+                    var currentDelay = 50L
+
+                    repeat(12) {
+                        currentDice = diceSymbols.random()
+                        delay(currentDelay)
+                        currentDelay += 35L
+                    }
+
+                    currentDice = diceSymbols.random()
+                    isRolling = false
+                }
+            },
+            enabled = !isRolling,
+            modifier = Modifier.testTag("btnRoll")
+        ) {
+            Text(
+                text = "Hodit",
+                fontSize = 24.sp
+            )
+        }
+    }
+}
